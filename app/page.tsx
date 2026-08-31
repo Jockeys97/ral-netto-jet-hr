@@ -35,13 +35,18 @@ const pct = new Intl.NumberFormat('it-IT', {
 const sources = [
   {
     label: 'Scaglioni IRPEF 2026',
-    detail: 'Legge 199/2025, art. 1',
-    href: 'https://www.normattiva.it/eli/stato/LEGGE/2025/12/30/199/CONSOLIDATED',
+    detail: 'Legge 199/2025, art. 1 — versione vigente al 31/12/2026',
+    href: 'https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2025-12-30;199~art1!vig=2026-12-31',
   },
   {
-    label: 'Detrazioni e cuneo fiscale',
+    label: 'Detrazione da lavoro dipendente',
     detail: 'D.P.R. 917/1986, art. 13 — versione vigente al 31/12/2026',
     href: 'https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidente.repubblica:decreto:1986-12-22;917~art13!vig=2026-12-31',
+  },
+  {
+    label: 'Riduzione del cuneo fiscale',
+    detail: 'Legge 207/2024, art. 1, commi 4–7 — versione vigente al 31/12/2026',
+    href: 'https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2024-12-30;207~art1!vig=2026-12-31',
   },
   {
     label: 'Nuovo Testo unico dal 2027',
@@ -55,12 +60,12 @@ const sources = [
   },
   {
     label: 'Aliquota FPLD ordinaria',
-    detail: 'INPS: 9,19% lavoratore',
+    detail: 'Circolare INPS 101/2024: richiamo al 9,19% a carico del lavoratore',
     href: 'https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2024.11.circolare-numero-101-del-29-11-2024_14714.html',
   },
   {
     label: 'Addizionali Lombardia 2026',
-    detail: 'Elenco ufficiale MEF',
+    detail: 'Elenco ufficiale MEF con CSV 2026',
     href: 'https://www1.finanze.gov.it/finanze2/dipartimentopolitichefiscali/fiscalitalocale/addregirpef/download/tabella.htm',
   },
   {
@@ -69,8 +74,8 @@ const sources = [
     href: 'https://www.comune.milano.it/argomenti/tributi/addizionale-comunale-irpef',
   },
   {
-    label: 'Delibere comunali',
-    detail: 'Archivio ufficiale MEF',
+    label: 'Delibere Milano 2025/2026',
+    detail: 'Archivio MEF: dato 2025 e assenza di dati 2026',
     href: 'https://www1.finanze.gov.it/finanze2/dipartimentopolitichefiscali/fiscalitalocale/nuova_addcomirpef/risultato.htm?anno=9999&cc=F205&pr=MI&r=1',
   },
 ];

@@ -50,10 +50,10 @@ Il modello assume inoltre un lavoratore iscritto a forme pensionistiche obbligat
 
 - [D.P.R. 917/1986, art. 13 — versione vigente al 31 dicembre 2026](https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidente.repubblica:decreto:1986-12-22;917~art13!vig=2026-12-31)
 - [D.Lgs. 117/2026 — nuovo Testo unico applicabile dal 1° gennaio 2027](https://www.gazzettaufficiale.it/eli/id/2026/07/03/26G00131/sg)
-- [Legge 199/2025 — riduzione al 33% del secondo scaglione IRPEF dal 2026](https://www.normattiva.it/eli/stato/LEGGE/2025/12/30/199/CONSOLIDATED)
-- [Legge 207/2024 — riduzione del cuneo fiscale](https://www.normattiva.it/uri-res/N2Ls?urn%3Anir%3Astato%3Alegge%3A2024-12-30%3B207~art1-com78%21vig=)
+- [Legge 199/2025, art. 1 — riduzione al 33% del secondo scaglione IRPEF; versione vigente al 31 dicembre 2026](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2025-12-30;199~art1!vig=2026-12-31)
+- [Legge 207/2024, art. 1, commi 4-7 — riduzione del cuneo fiscale; versione vigente al 31 dicembre 2026](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2024-12-30;207~art1!vig=2026-12-31)
 - [INPS, circolare 6/2026 — soglia dell'1% e massimale contributivo](https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2026.01.circolare-numero-6-del-30-01-2026_15151.html)
-- [INPS, circolare 101/2024 — aliquota FPLD 33%, di cui 9,19% a carico del lavoratore](https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2024.11.circolare-numero-101-del-29-11-2024_14714.html)
+- [INPS, circolare 101/2024 — richiamo all'aliquota FPLD ordinaria del 33%, di cui 9,19% a carico del lavoratore](https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2024.11.circolare-numero-101-del-29-11-2024_14714.html)
 - [MEF — elenco ufficiale addizionali regionali 2026](https://www1.finanze.gov.it/finanze2/dipartimentopolitichefiscali/fiscalitalocale/addregirpef/download/tabella.htm)
 - [Comune di Milano — addizionale comunale IRPEF](https://www.comune.milano.it/argomenti/tributi/addizionale-comunale-irpef)
 - [MEF — archivio addizionale comunale di Milano](https://www1.finanze.gov.it/finanze2/dipartimentopolitichefiscali/fiscalitalocale/nuova_addcomirpef/risultato.htm?anno=9999&cc=F205&pr=MI&r=1)
