@@ -120,13 +120,11 @@ function Results({ result }: { result: SalaryResult }) {
             </p>
           </div>
           <div className="rounded-xl bg-white/8 p-4 ring-1 ring-white/10">
-            <p className="text-xs text-blue-100">RAL trattenuta</p>
+            <p className="text-xs text-blue-100">Quota netta</p>
             <p className="mt-1 font-mono text-xl font-semibold tabular-nums">
               {pct.format(retained)}
             </p>
-            <p className="mt-1 text-[11px] text-blue-200">
-              al netto delle stime
-            </p>
+            <p className="mt-1 text-[11px] text-blue-200">della RAL iniziale</p>
           </div>
         </CardContent>
       </Card>
@@ -163,6 +161,20 @@ function Results({ result }: { result: SalaryResult }) {
             label="Addizionale comunale Milano"
             value={result.municipalTax}
           />
+          <div className="my-3 grid grid-cols-2 gap-2 border-y border-slate-200 py-3">
+            <div className="rounded-lg bg-slate-50 p-3">
+              <p className="text-xs text-slate-500">Totale imposte</p>
+              <p className="mt-1 font-mono text-base font-bold text-slate-900">
+                {eur.format(result.totalTaxes)}
+              </p>
+            </div>
+            <div className="rounded-lg bg-slate-50 p-3">
+              <p className="text-xs text-slate-500">Totale trattenute</p>
+              <p className="mt-1 font-mono text-base font-bold text-slate-900">
+                {eur.format(result.totalDeductions)}
+              </p>
+            </div>
+          </div>
           {result.taxFreeBenefit > 0 && (
             <MoneyRow
               label="Somma esente per riduzione del cuneo"
@@ -299,7 +311,7 @@ export default function Home() {
 
             <fieldset className="mt-5">
               <legend className="text-xs font-medium text-slate-500">
-                Mensilità
+                Mensilità <span className="text-[#244fbf]">· 13 standard</span>
               </legend>
               <div className="mt-2 grid grid-cols-3 gap-2">
                 {([12, 13, 14] as const).map((value) => (
@@ -363,6 +375,16 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+            <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4">
+              <h3 className="text-sm font-semibold text-slate-900">
+                Fuori dal perimetro
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Il calcolo riguarda ciò che riceve il dipendente. Non include
+                contributi aziendali, INAIL, TFR, fondi, welfare, buoni pasto o
+                altri elementi del costo complessivo per l’azienda.
+              </p>
+            </div>
           </div>
 
           <div>

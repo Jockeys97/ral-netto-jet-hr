@@ -11,21 +11,47 @@ export type SalaryResult = {
   netIrpef: number;
   regionalTax: number;
   municipalTax: number;
+  totalTaxes: number;
+  totalDeductions: number;
   taxFreeBenefit: number;
   integrativeTreatment: number;
+  totalBenefits: number;
   netAnnual: number;
   netMonthly: number;
 };
 
 type Bracket = { limit: number; rate: number };
 
-// Model reviewed on 31 August 2026. Official traceability is documented in README.md.
-const ORDINARY_EMPLOYEE_RATE = 0.0919;
-const ADDITIONAL_RATE = 0.01;
-const ADDITIONAL_THRESHOLD_2026 = 56_224;
-const POST_1995_CONTRIBUTION_CAP_2026 = 122_295;
+// One readable configuration for every rate and threshold used by the model.
+// Reviewed on 31 August 2026; source-level traceability lives in README.md.
+export const FISCAL_MODEL_2026 = {
+  year: 2026,
+  contributions: {
+    ordinaryEmployeeRate: 0.0919,
+    additionalRate: 0.01,
+    additionalThreshold: 56_224,
+    post1995Cap: 122_295,
+  },
+  irpefBrackets: [
+    { limit: 28_000, rate: 0.23 },
+    { limit: 50_000, rate: 0.33 },
+    { limit: Number.POSITIVE_INFINITY, rate: 0.43 },
+  ] satisfies Bracket[],
+  regionalBrackets: [
+    { limit: 15_000, rate: 0.0123 },
+    { limit: 28_000, rate: 0.0158 },
+    { limit: 50_000, rate: 0.0172 },
+    { limit: Number.POSITIVE_INFINITY, rate: 0.0173 },
+  ] satisfies Bracket[],
+  municipal: { exemptionThreshold: 23_000, rate: 0.008 },
+  integrativeTreatment: {
+    incomeLimit: 15_000,
+    capacityOffset: 75,
+    amount: 1_200,
+  },
+} as const;
 
-function progressiveTax(income: number, brackets: Bracket[]) {
+function progressiveTax(income: number, brackets: readonly Bracket[]) {
   let tax = 0;
   let previousLimit = 0;
   for (const bracket of brackets) {
@@ -73,17 +99,16 @@ export function calculateSalary(
 ): SalaryResult {
   const gross = Math.max(0, grossAnnual);
   // Standard case: non-managerial private employee first insured after 31/12/1995.
-  const contributionBase = Math.min(gross, POST_1995_CONTRIBUTION_CAP_2026);
-  const ordinaryContributions = contributionBase * ORDINARY_EMPLOYEE_RATE;
+  const model = FISCAL_MODEL_2026;
+  const contributionBase = Math.min(gross, model.contributions.post1995Cap);
+  const ordinaryContributions =
+    contributionBase * model.contributions.ordinaryEmployeeRate;
   const additionalContribution =
-    Math.max(0, contributionBase - ADDITIONAL_THRESHOLD_2026) * ADDITIONAL_RATE;
+    Math.max(0, contributionBase - model.contributions.additionalThreshold) *
+    model.contributions.additionalRate;
   const socialContributions = ordinaryContributions + additionalContribution;
   const taxableIncome = Math.max(0, gross - socialContributions);
-  const grossIrpef = progressiveTax(taxableIncome, [
-    { limit: 28_000, rate: 0.23 },
-    { limit: 50_000, rate: 0.33 },
-    { limit: Number.POSITIVE_INFINITY, rate: 0.43 },
-  ]);
+  const grossIrpef = progressiveTax(taxableIncome, model.irpefBrackets);
   const statutoryEmployeeDeduction = employeeTaxDeduction(taxableIncome);
   const employeeDeduction = Math.min(grossIrpef, statutoryEmployeeDeduction);
   const relief = taxWedgeRelief(taxableIncome);
@@ -96,31 +121,22 @@ export function calculateSalary(
     grossIrpef - employeeDeduction - additionalDeduction,
   );
   const regionalTax =
-    netIrpef > 0
-      ? progressiveTax(taxableIncome, [
-          { limit: 15_000, rate: 0.0123 },
-          { limit: 28_000, rate: 0.0158 },
-          { limit: 50_000, rate: 0.0172 },
-          { limit: Number.POSITIVE_INFINITY, rate: 0.0173 },
-        ])
-      : 0;
+    netIrpef > 0 ? progressiveTax(taxableIncome, model.regionalBrackets) : 0;
   const municipalTax =
-    netIrpef > 0 && taxableIncome > 23_000 ? taxableIncome * 0.008 : 0;
+    netIrpef > 0 && taxableIncome > model.municipal.exemptionThreshold
+      ? taxableIncome * model.municipal.rate
+      : 0;
   // Permanent €1,200 treatment: included only below €15k when the statutory capacity test is met.
   const integrativeTreatment =
-    taxableIncome <= 15_000 && grossIrpef > statutoryEmployeeDeduction - 75
-      ? 1_200
+    taxableIncome <= model.integrativeTreatment.incomeLimit &&
+    grossIrpef >
+      statutoryEmployeeDeduction - model.integrativeTreatment.capacityOffset
+      ? model.integrativeTreatment.amount
       : 0;
-  const netAnnual = Math.max(
-    0,
-    gross -
-      socialContributions -
-      netIrpef -
-      regionalTax -
-      municipalTax +
-      relief.taxFreeBenefit +
-      integrativeTreatment,
-  );
+  const totalTaxes = netIrpef + regionalTax + municipalTax;
+  const totalDeductions = socialContributions + totalTaxes;
+  const totalBenefits = relief.taxFreeBenefit + integrativeTreatment;
+  const netAnnual = Math.max(0, gross - totalDeductions + totalBenefits);
   return {
     grossAnnual: gross,
     months,
@@ -134,8 +150,11 @@ export function calculateSalary(
     netIrpef,
     regionalTax,
     municipalTax,
+    totalTaxes,
+    totalDeductions,
     taxFreeBenefit: relief.taxFreeBenefit,
     integrativeTreatment,
+    totalBenefits,
     netAnnual,
     netMonthly: netAnnual / months,
   };

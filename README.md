@@ -2,6 +2,10 @@
 
 Prototipo realizzato per la task tecnica **AI Builder / Product Builder di Jet HR**.
 
+## Problema e utente
+
+Il prototipo risponde alla domanda: **“Se offro a una persona una certa RAL, quanto riceverà e quali trattenute verranno applicate?”** È pensato per founder, responsabili HR e candidati che hanno bisogno di una prima stima comprensibile senza conoscere in anticipo la struttura di un cedolino.
+
 L'applicazione riceve una retribuzione annua lorda e restituisce:
 
 - netto annuo stimato;
@@ -9,6 +13,7 @@ L'applicazione riceve una retribuzione annua lorda e restituisce:
 - contributi previdenziali del lavoratore;
 - IRPEF lorda, detrazioni e IRPEF netta;
 - addizionali regionale e comunale;
+- totale delle imposte e totale delle trattenute;
 - fonti e ipotesi usate dal modello.
 
 ## Avvio locale
@@ -64,7 +69,7 @@ Fonti consultate il **31 agosto 2026**. Il modello va revisionato alla prima mod
 
 ## Casi di controllo
 
-I risultati di regressione per RAL €25.000, €35.000 e €50.000 sono definiti in `tests/salary.test.ts` e possono essere eseguiti con:
+I risultati di regressione per RAL €25.000, €30.000, €35.000 e €50.000 sono definiti in `tests/salary.test.ts` e possono essere eseguiti con:
 
 ```bash
 npm run test:calc
@@ -76,3 +81,14 @@ npm run test:calc
 - **Risultato immediato:** un valore di esempio è già visibile, poi l'utente può inserire la propria RAL.
 - **Progressive disclosure:** il dettaglio IRPEF è disponibile senza sovraccaricare la schermata principale.
 - **Fonti nel prodotto:** chi usa o valuta il prototipo può verificare direttamente le regole adottate.
+
+## Possibili evoluzioni
+
+- scelta di regione e comune;
+- configurazione del CCNL e dell'inquadramento contributivo;
+- familiari a carico e altre detrazioni o deduzioni;
+- apprendistato, tempo determinato e part-time;
+- bonus, fringe benefit, welfare e fondi integrativi;
+- simulazione dei singoli mesi anziché della sola media annuale;
+- confronto separato con il costo complessivo sostenuto dall'azienda;
+- aggiornamento versionato delle regole fiscali.
