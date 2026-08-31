@@ -2,6 +2,10 @@
 
 Prototipo realizzato per la task tecnica **AI Builder / Product Builder di Jet HR**.
 
+## Demo
+
+[Apri il prototipo su Vercel](https://jet-hr-netto-task.vercel.app)
+
 ## Problema e utente
 
 Il prototipo risponde alla domanda: **“Se offro a una persona una certa RAL, quanto riceverà e quali trattenute verranno applicate?”** È pensato per founder, responsabili HR e candidati che hanno bisogno di una prima stima comprensibile senza conoscere in anticipo la struttura di un cedolino.
