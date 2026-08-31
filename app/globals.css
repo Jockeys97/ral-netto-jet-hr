@@ -54,6 +54,8 @@ body {
 }
 
 :root {
+  --font-geist-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --background: #f6f4ed;
   --foreground: #111b33;
   --card: oklch(1 0 0);
