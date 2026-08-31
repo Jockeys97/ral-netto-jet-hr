@@ -40,8 +40,13 @@ const sources = [
   },
   {
     label: 'Detrazioni e cuneo fiscale',
-    detail: 'TUIR vigente e Legge 207/2024',
-    href: 'https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidente.repubblica:decreto:1986-12-22;917',
+    detail: 'D.P.R. 917/1986, art. 13 — versione vigente al 31/12/2026',
+    href: 'https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidente.repubblica:decreto:1986-12-22;917~art13!vig=2026-12-31',
+  },
+  {
+    label: 'Nuovo Testo unico dal 2027',
+    detail: 'D.Lgs. 117/2026 — sostituisce il D.P.R. 917/1986 dal 1° gennaio 2027',
+    href: 'https://www.gazzettaufficiale.it/eli/id/2026/07/03/26G00131/sg',
   },
   {
     label: 'Soglie contributive 2026',
@@ -411,9 +416,13 @@ export default function Home() {
               ))}
             </div>
             <p className="mt-5 text-xs leading-5 text-slate-500">
-              Fonti consultate il 31 agosto 2026. Il MEF non riporta ancora una
-              delibera Milano 2026: viene quindi riutilizzata, dichiarandolo,
-              l’ultima regola completa 2025 (0,8%, esenzione fino a €23.000).
+              Per il periodo d’imposta 2026 si applica il D.P.R. 917/1986 nella
+              versione vigente al 31 dicembre 2026. Il provvedimento risulta
+              abrogato dal 1° gennaio 2027, quando viene sostituito dal D.Lgs.
+              117/2026. Fonti consultate il 31 agosto 2026. Il MEF non riporta
+              ancora una delibera Milano 2026: viene quindi riutilizzata,
+              dichiarandolo, l’ultima regola completa 2025 (0,8%, esenzione
+              fino a €23.000).
             </p>
           </div>
         </div>

@@ -48,7 +48,8 @@ Il modello assume inoltre un lavoratore iscritto a forme pensionistiche obbligat
 
 ## Fonti
 
-- [TUIR vigente — base imponibile e detrazione da lavoro dipendente](https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidente.repubblica:decreto:1986-12-22;917)
+- [D.P.R. 917/1986, art. 13 — versione vigente al 31 dicembre 2026](https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidente.repubblica:decreto:1986-12-22;917~art13!vig=2026-12-31)
+- [D.Lgs. 117/2026 — nuovo Testo unico applicabile dal 1° gennaio 2027](https://www.gazzettaufficiale.it/eli/id/2026/07/03/26G00131/sg)
 - [Legge 199/2025 — riduzione al 33% del secondo scaglione IRPEF dal 2026](https://www.normattiva.it/eli/stato/LEGGE/2025/12/30/199/CONSOLIDATED)
 - [Legge 207/2024 — riduzione del cuneo fiscale](https://www.normattiva.it/uri-res/N2Ls?urn%3Anir%3Astato%3Alegge%3A2024-12-30%3B207~art1-com78%21vig=)
 - [INPS, circolare 6/2026 — soglia dell'1% e massimale contributivo](https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2026.01.circolare-numero-6-del-30-01-2026_15151.html)
@@ -56,6 +57,8 @@ Il modello assume inoltre un lavoratore iscritto a forme pensionistiche obbligat
 - [MEF — elenco ufficiale addizionali regionali 2026](https://www1.finanze.gov.it/finanze2/dipartimentopolitichefiscali/fiscalitalocale/addregirpef/download/tabella.htm)
 - [Comune di Milano — addizionale comunale IRPEF](https://www.comune.milano.it/argomenti/tributi/addizionale-comunale-irpef)
 - [MEF — archivio addizionale comunale di Milano](https://www1.finanze.gov.it/finanze2/dipartimentopolitichefiscali/fiscalitalocale/nuova_addcomirpef/risultato.htm?anno=9999&cc=F205&pr=MI&r=1)
+
+Per il periodo d'imposta 2026 il modello applica il D.P.R. 917/1986 nella versione vigente al **31 dicembre 2026**. L'indicazione di «provvedimento abrogato» mostrata da Normattiva riguarda il testo futuro in vigore dal **1° gennaio 2027**, quando il D.P.R. 917/1986 viene sostituito dal D.Lgs. 117/2026.
 
 Fonti consultate il **31 agosto 2026**. Il modello va revisionato alla prima modifica normativa o, in assenza di modifiche, entro il **31 gennaio 2027**.
 
@@ -65,8 +68,8 @@ Fonti consultate il **31 agosto 2026**. Il modello va revisionato alla prima mod
 | --------------------- | ----------------------------------------------------------- | -------------------------------------------- |
 | Contributi ordinari   | `min(RAL, 122.295) × 9,19%`                                 | INPS, caso standard e valori 2026            |
 | Contributo aggiuntivo | `1%` sulla base oltre `€56.224`, entro il massimale         | Circolare INPS 6/2026                        |
-| IRPEF                 | 23% fino a €28k; 33% da €28k a €50k; 43% oltre              | TUIR + Legge 199/2025                        |
-| Detrazione lavoro     | Formula dell'art. 13 TUIR, inclusi €65 tra €25k e €35k      | TUIR vigente                                 |
+| IRPEF                 | 23% fino a €28k; 33% da €28k a €50k; 43% oltre              | D.P.R. 917/1986 (versione 2026) + Legge 199/2025 |
+| Detrazione lavoro     | Formula dell'art. 13 TUIR, inclusi €65 tra €25k e €35k      | D.P.R. 917/1986, art. 13, vigente al 31/12/2026 |
 | Riduzione cuneo       | Somma esente fino a €20k; ulteriore detrazione fino a €40k  | Legge 207/2024                               |
 | Lombardia             | 1,23%; 1,58%; 1,72%; 1,73% per scaglioni                    | CSV MEF 2026, pubblicato 28/01/2026          |
 | Milano                | 0,8% sull'intero imponibile oltre €23k; sotto soglia esente | Ultima regola completa MEF/Comune, anno 2025 |
