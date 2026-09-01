@@ -103,13 +103,13 @@ Il modello assume inoltre un lavoratore iscritto a forme pensionistiche obbligat
 
 ### Criterio di scelta e validità temporale delle fonti
 
-Le formule non derivano da blog o calcolatori commerciali. Ho seguito una gerarchia di fonti primarie coerente con la natura di ciascuna voce:
+Per una prima ricognizione ho utilizzato **Perplexity Deep Research** per individuare e confrontare i riferimenti rilevanti. Ogni aliquota, soglia e formula applicata nel modello è stata successivamente verificata direttamente sulle fonti primarie, seguendo una gerarchia coerente con la natura di ciascuna voce:
 
 1. **Normattiva e Gazzetta Ufficiale** per aliquote, detrazioni e agevolazioni previste dalla normativa nazionale;
 2. **INPS** per aliquote, soglie e massimali contributivi;
 3. **MEF, Regione Lombardia e Comune di Milano** per le addizionali territoriali.
 
-Le fonti secondarie possono essere utili come controllo di plausibilità, ma non modificano automaticamente il modello. In caso di differenza con un calcolatore esterno, occorre prima confrontare anno fiscale, residenza, CCNL, qualifica, mensilità, detrazioni e modalità di applicazione delle addizionali.
+Blog e calcolatori commerciali non sono stati utilizzati per definire le formule, ma soltanto come eventuale controllo di plausibilità. In presenza di risultati differenti, il modello non viene modificato automaticamente: vengono prima confrontati anno fiscale, residenza, CCNL, qualifica, mensilità, detrazioni e modalità di applicazione delle addizionali.
 
 Per evitare che un collegamento consolidato mostri una versione normativa successiva a quella simulata, i link a Normattiva sono fissati alla versione vigente al **31 dicembre 2026**. Il modello applica quindi il D.P.R. 917/1986 valido per il periodo d'imposta 2026.
 
