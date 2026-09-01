@@ -7,6 +7,7 @@ import {
   BadgeEuro,
   Calculator,
   CheckCircle2,
+  Download,
   ExternalLink,
   Info,
 } from 'lucide-react';
@@ -45,12 +46,14 @@ const sources = [
   },
   {
     label: 'Riduzione del cuneo fiscale',
-    detail: 'Legge 207/2024, art. 1, commi 4–7 — versione vigente al 31/12/2026',
+    detail:
+      'Legge 207/2024, art. 1, commi 4–7 — versione vigente al 31/12/2026',
     href: 'https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2024-12-30;207~art1!vig=2026-12-31',
   },
   {
     label: 'Nuovo Testo unico dal 2027',
-    detail: 'D.Lgs. 117/2026 — sostituisce il D.P.R. 917/1986 dal 1° gennaio 2027',
+    detail:
+      'D.Lgs. 117/2026 — sostituisce il D.P.R. 917/1986 dal 1° gennaio 2027',
     href: 'https://www.gazzettaufficiale.it/eli/id/2026/07/03/26G00131/sg',
   },
   {
@@ -60,7 +63,8 @@ const sources = [
   },
   {
     label: 'Aliquota FPLD ordinaria',
-    detail: 'Circolare INPS 101/2024: richiamo al 9,19% a carico del lavoratore',
+    detail:
+      'Circolare INPS 101/2024: richiamo al 9,19% a carico del lavoratore',
     href: 'https://www.inps.it/it/it/inps-comunica/atti/circolari-messaggi-e-normativa/dettaglio.circolari-e-messaggi.2024.11.circolare-numero-101-del-29-11-2024_14714.html',
   },
   {
@@ -110,10 +114,21 @@ function Results({ result }: { result: SalaryResult }) {
   const [breakdownView, setBreakdownView] = useState<'annual' | 'monthly'>(
     'annual',
   );
+  const [isExporting, setIsExporting] = useState(false);
   const retained = result.netAnnual / result.grossAnnual;
   const isMonthly = breakdownView === 'monthly';
   const divisor = isMonthly ? result.months : 1;
   const shown = (value: number) => value / divisor;
+
+  async function downloadPdf() {
+    setIsExporting(true);
+    try {
+      const { exportSalaryPdf } = await import('@/lib/pdf');
+      exportSalaryPdf(result);
+    } finally {
+      setIsExporting(false);
+    }
+  }
 
   return (
     <div className="space-y-4" aria-live="polite">
@@ -149,9 +164,7 @@ function Results({ result }: { result: SalaryResult }) {
       <Card className="bg-white/90 shadow-sm ring-slate-200">
         <CardHeader className="border-b border-slate-100 sm:grid-cols-[1fr_auto] sm:grid-rows-[auto_auto]">
           <CardTitle>Come si arriva al netto</CardTitle>
-          <fieldset
-            className="mt-2 inline-grid grid-cols-2 rounded-lg bg-slate-100 p-1 sm:col-start-2 sm:row-span-2 sm:mt-0 sm:self-center"
-          >
+          <fieldset className="mt-2 inline-grid grid-cols-2 rounded-lg bg-slate-100 p-1 sm:col-start-2 sm:row-span-2 sm:mt-0 sm:self-center">
             <legend className="sr-only">Periodo del dettaglio</legend>
             {(['annual', 'monthly'] as const).map((view) => (
               <button
@@ -173,7 +186,11 @@ function Results({ result }: { result: SalaryResult }) {
         </CardHeader>
         <CardContent>
           <MoneyRow
-            label={isMonthly ? 'Retribuzione lorda media' : 'Retribuzione annua lorda'}
+            label={
+              isMonthly
+                ? 'Retribuzione lorda media'
+                : 'Retribuzione annua lorda'
+            }
             value={shown(result.grossAnnual)}
             tone="neutral"
           />
@@ -268,6 +285,17 @@ function Results({ result }: { result: SalaryResult }) {
           )}
         </div>
       </details>
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={downloadPdf}
+        disabled={isExporting}
+        className="h-11 w-full rounded-xl border-[#244fbf]/25 bg-white/75 text-[#244fbf] shadow-sm hover:border-[#244fbf]/45 hover:bg-[#eef3ff]"
+      >
+        <Download className="size-4" />
+        {isExporting ? 'Creo il PDF...' : 'Scarica riepilogo PDF'}
+      </Button>
     </div>
   );
 }
@@ -314,7 +342,7 @@ export default function Home() {
             <Calculator className="size-4" /> Simulatore per dipendenti
           </p>
           <h1 className="max-w-xl text-5xl font-semibold leading-[0.96] tracking-[-0.065em] text-[#111b33] sm:text-6xl">
-            Dalla RAL al netto, senza scatole nere.
+            Dalla RAL al netto
           </h1>
           <p className="mt-6 max-w-lg text-base leading-7 text-slate-600">
             Una stima trasparente per un dipendente a tempo indeterminato
@@ -458,8 +486,8 @@ export default function Home() {
               abrogato dal 1° gennaio 2027, quando viene sostituito dal D.Lgs.
               117/2026. Fonti consultate il 31 agosto 2026. Il MEF non riporta
               ancora una delibera Milano 2026: viene quindi riutilizzata,
-              dichiarandolo, l’ultima regola completa 2025 (0,8%, esenzione
-              fino a €23.000).
+              dichiarandolo, l’ultima regola completa 2025 (0,8%, esenzione fino
+              a €23.000).
             </p>
           </div>
         </div>

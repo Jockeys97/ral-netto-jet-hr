@@ -19,6 +19,7 @@ L'applicazione riceve una retribuzione annua lorda e restituisce:
 - IRPEF lorda, detrazioni e IRPEF netta;
 - addizionali regionale e comunale;
 - totale delle imposte e totale delle trattenute;
+- riepilogo PDF scaricabile con risultato, dettaglio fiscale, ipotesi e limiti;
 - fonti e ipotesi usate dal modello.
 
 ## Perimetro scelto
@@ -29,16 +30,17 @@ Questa scelta rende ogni risultato riconducibile a un'ipotesi esplicita. Regione
 
 ## Decisioni di prodotto
 
-| Decisione | Perché | Compromesso dichiarato |
-| --- | --- | --- |
-| Un solo caso standard Milano | Mantiene il modello verificabile e permette di mostrare anche le addizionali | Il risultato non è generalizzabile automaticamente ad altri territori o inquadramenti |
-| RAL come unico dato richiesto | Riduce l'attrito e risponde subito alla domanda principale | Le caratteristiche personali che influenzano il cedolino restano fuori dal perimetro |
-| Netto annuo in evidenza | È il risultato fiscalmente coerente con un calcolo costruito su base annuale | Il netto mensile viene presentato come media, non come cedolino reale |
-| Scelta tra 12, 13 e 14 mensilità | Traduce lo stesso netto annuo nella periodicità più utile all'utente | Cambia la distribuzione media, non imposte o contributi annuali |
-| Dettaglio Annuale/Mensile | Permette di leggere ogni voce nell'unità più familiare | La vista mensile divide gli importi annuali e non simula i tempi reali delle trattenute |
-| Dettaglio IRPEF espandibile | Offre profondità senza sovraccaricare la prima lettura | L'utente deve aprire volontariamente il livello più tecnico |
-| Fonti dentro il prodotto | Aliquote e soglie possono essere controllate senza fidarsi di una “scatola nera” | La manutenzione normativa diventa parte esplicita del prodotto |
-| Importi mostrati senza centesimi | Favorisce una lettura rapida ed evita un'impressione di precisione da cedolino | Il motore conserva i decimali; l'interfaccia arrotonda soltanto la visualizzazione |
+| Decisione                        | Perché                                                                           | Compromesso dichiarato                                                                  |
+| -------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Un solo caso standard Milano     | Mantiene il modello verificabile e permette di mostrare anche le addizionali     | Il risultato non è generalizzabile automaticamente ad altri territori o inquadramenti   |
+| RAL come unico dato richiesto    | Riduce l'attrito e risponde subito alla domanda principale                       | Le caratteristiche personali che influenzano il cedolino restano fuori dal perimetro    |
+| Netto annuo in evidenza          | È il risultato fiscalmente coerente con un calcolo costruito su base annuale     | Il netto mensile viene presentato come media, non come cedolino reale                   |
+| Scelta tra 12, 13 e 14 mensilità | Traduce lo stesso netto annuo nella periodicità più utile all'utente             | Cambia la distribuzione media, non imposte o contributi annuali                         |
+| Dettaglio Annuale/Mensile        | Permette di leggere ogni voce nell'unità più familiare                           | La vista mensile divide gli importi annuali e non simula i tempi reali delle trattenute |
+| Dettaglio IRPEF espandibile      | Offre profondità senza sovraccaricare la prima lettura                           | L'utente deve aprire volontariamente il livello più tecnico                             |
+| Riepilogo PDF opzionale          | Rende la stima condivisibile e conserva insieme risultato, ipotesi e avvertenze  | Non è un cedolino né un documento fiscale; la libreria viene caricata solo su richiesta |
+| Fonti dentro il prodotto         | Aliquote e soglie possono essere controllate senza fidarsi di una “scatola nera” | La manutenzione normativa diventa parte esplicita del prodotto                          |
+| Importi mostrati senza centesimi | Favorisce una lettura rapida ed evita un'impressione di precisione da cedolino   | Il motore conserva i decimali; l'interfaccia arrotonda soltanto la visualizzazione      |
 
 ## Avvio locale
 
@@ -55,6 +57,7 @@ Il prototipo usa Next.js, React e TypeScript. Il calcolo avviene interamente nel
 
 - `app/page.tsx`: interfaccia, stato dell'input e presentazione dei risultati;
 - `lib/salary.ts`: motore di calcolo puro e configurazione centralizzata di aliquote e soglie;
+- `lib/pdf.ts`: generazione client-side del riepilogo PDF, caricata solo al clic;
 - `tests/salary.test.ts`: casi di regressione e controlli sui principali punti di discontinuità;
 - `README.md`: fonti, formule, ipotesi, decisioni e limiti del modello.
 
@@ -62,7 +65,7 @@ Separare il motore dalla UI consente di testare le formule senza dipendere dal b
 
 ### Dati e privacy
 
-La RAL inserita non viene salvata né inviata a servizi esterni. Tutti i risultati vengono calcolati localmente nella sessione del browser.
+La RAL inserita non viene salvata né inviata a servizi esterni. Tutti i risultati vengono calcolati localmente nella sessione del browser. Anche il PDF viene generato nel browser e scaricato direttamente sul dispositivo, senza trasmettere i dati a un server.
 
 ## Modello di calcolo
 
@@ -122,16 +125,16 @@ Le fonti sono state consultate il **31 agosto 2026**. Il modello deve essere rev
 
 ### Tracciabilità delle formule
 
-| Voce                  | Formula adottata                                            | Fonte / anno                                 |
-| --------------------- | ----------------------------------------------------------- | -------------------------------------------- |
-| Contributi ordinari   | `min(RAL, 122.295) × 9,19%`                                 | INPS, caso standard e valori 2026            |
-| Contributo aggiuntivo | `1%` sulla base oltre `€56.224`, entro il massimale         | Circolare INPS 6/2026                        |
-| IRPEF                 | 23% fino a €28k; 33% da €28k a €50k; 43% oltre              | D.P.R. 917/1986 (versione 2026) + Legge 199/2025 |
-| Detrazione lavoro     | Formula dell'art. 13 TUIR, inclusi €65 tra €25k e €35k      | D.P.R. 917/1986, art. 13, vigente al 31/12/2026 |
-| Riduzione cuneo       | Somma esente fino a €20k; ulteriore detrazione fino a €40k  | Legge 207/2024                               |
-| Lombardia             | 1,23%; 1,58%; 1,72%; 1,73% per scaglioni                    | Elenco MEF 2026, aggiornato 19/06/2026       |
-| Milano                | 0,8% sull'intero imponibile oltre €23k; sotto soglia esente | Ultima regola completa MEF/Comune, anno 2025 |
-| Trattamento integrativo | €1.200 sotto €15k, subordinato al test di capienza          | D.L. 3/2020, art. 1, versione 2026           |
+| Voce                    | Formula adottata                                            | Fonte / anno                                     |
+| ----------------------- | ----------------------------------------------------------- | ------------------------------------------------ |
+| Contributi ordinari     | `min(RAL, 122.295) × 9,19%`                                 | INPS, caso standard e valori 2026                |
+| Contributo aggiuntivo   | `1%` sulla base oltre `€56.224`, entro il massimale         | Circolare INPS 6/2026                            |
+| IRPEF                   | 23% fino a €28k; 33% da €28k a €50k; 43% oltre              | D.P.R. 917/1986 (versione 2026) + Legge 199/2025 |
+| Detrazione lavoro       | Formula dell'art. 13 TUIR, inclusi €65 tra €25k e €35k      | D.P.R. 917/1986, art. 13, vigente al 31/12/2026  |
+| Riduzione cuneo         | Somma esente fino a €20k; ulteriore detrazione fino a €40k  | Legge 207/2024                                   |
+| Lombardia               | 1,23%; 1,58%; 1,72%; 1,73% per scaglioni                    | Elenco MEF 2026, aggiornato 19/06/2026           |
+| Milano                  | 0,8% sull'intero imponibile oltre €23k; sotto soglia esente | Ultima regola completa MEF/Comune, anno 2025     |
+| Trattamento integrativo | €1.200 sotto €15k, subordinato al test di capienza          | D.L. 3/2020, art. 1, versione 2026               |
 
 ## Casi di controllo
 
