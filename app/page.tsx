@@ -124,7 +124,7 @@ function Results({ result }: { result: SalaryResult }) {
     setIsExporting(true);
     try {
       const { exportSalaryPdf } = await import('@/lib/pdf');
-      exportSalaryPdf(result);
+      exportSalaryPdf(result, breakdownView);
     } finally {
       setIsExporting(false);
     }

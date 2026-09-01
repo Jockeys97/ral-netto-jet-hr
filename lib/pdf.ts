@@ -9,6 +9,8 @@ const LIGHT_BLUE = '#eef3ff';
 const LIGHT_GRAY = '#f6f7f9';
 const GREEN = '#087a55';
 
+export type PdfView = 'annual' | 'monthly';
+
 function amount(value: number) {
   return `${new Intl.NumberFormat('it-IT', {
     maximumFractionDigits: 0,
@@ -23,15 +25,30 @@ function dateLabel() {
   }).format(new Date());
 }
 
-function filename(result: SalaryResult) {
-  return `stima-netto-${Math.round(result.grossAnnual)}-eur.pdf`;
+function filename(result: SalaryResult, view: PdfView) {
+  const period = view === 'monthly' ? 'mensile' : 'annuale';
+  return `stima-netto-${period}-${Math.round(result.grossAnnual)}-eur.pdf`;
 }
 
-export function buildSalaryPdf(result: SalaryResult) {
+export function buildSalaryPdf(result: SalaryResult, view: PdfView = 'annual') {
   const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const margin = 18;
   const contentWidth = pageWidth - margin * 2;
+  const isMonthly = view === 'monthly';
+  const divisor = isMonthly ? result.months : 1;
+  const shown = (value: number) => value / divisor;
+  const primaryNet = shown(result.netAnnual);
+  const primaryNetLabel = isMonthly
+    ? 'Netto mensile medio'
+    : 'Netto annuo stimato';
+  const secondaryNet = isMonthly ? result.netAnnual : result.netMonthly;
+  const secondaryNetLabel = isMonthly
+    ? 'netto annuo stimato'
+    : `media su ${result.months} mensilita`;
+  const calculationLabel = isMonthly
+    ? `Media su ${result.months} mensilita generata il ${dateLabel()}`
+    : `Calcolo annuale generato il ${dateLabel()}`;
 
   pdf.setFillColor(NAVY);
   pdf.roundedRect(margin, 15, contentWidth, 50, 4, 4, 'F');
@@ -44,21 +61,21 @@ export function buildSalaryPdf(result: SalaryResult) {
   pdf.text('STIMA ORIENTATIVA - MODELLO FISCALE 2026', margin + 8, 34);
   pdf.setFontSize(24);
   pdf.setTextColor('#ffffff');
-  pdf.text(amount(result.netAnnual), margin + 8, 49);
+  pdf.text(amount(primaryNet), margin + 8, 49);
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(8.5);
   pdf.setTextColor('#c9d6ff');
-  pdf.text('Netto annuo stimato', margin + 8, 56);
+  pdf.text(primaryNetLabel, margin + 8, 56);
   pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(12);
   pdf.setTextColor('#ffffff');
-  pdf.text(amount(result.netMonthly), pageWidth - margin - 8, 48, {
+  pdf.text(amount(secondaryNet), pageWidth - margin - 8, 48, {
     align: 'right',
   });
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(8);
   pdf.setTextColor('#c9d6ff');
-  pdf.text(`media su ${result.months} mensilita`, pageWidth - margin - 8, 56, {
+  pdf.text(secondaryNetLabel, pageWidth - margin - 8, 56, {
     align: 'right',
   });
 
@@ -69,29 +86,45 @@ export function buildSalaryPdf(result: SalaryResult) {
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(8.5);
   pdf.setTextColor(SLATE);
-  pdf.text(`Calcolo annuale generato il ${dateLabel()}`, margin, 86);
+  pdf.text(calculationLabel, margin, 86);
 
   const rows: Array<[string, number, 'neutral' | 'minus' | 'plus']> = [
-    ['Retribuzione annua lorda', result.grossAnnual, 'neutral'],
-    ['Contributi INPS ordinari (9,19%)', result.ordinaryContributions, 'minus'],
+    [
+      isMonthly ? 'Retribuzione lorda media' : 'Retribuzione annua lorda',
+      shown(result.grossAnnual),
+      'neutral',
+    ],
+    [
+      'Contributi INPS ordinari (9,19%)',
+      shown(result.ordinaryContributions),
+      'minus',
+    ],
   ];
   if (result.additionalContribution > 0) {
     rows.push([
       'Contributo aggiuntivo 1% oltre la soglia',
-      result.additionalContribution,
+      shown(result.additionalContribution),
       'minus',
     ]);
   }
   rows.push(
-    ['IRPEF netta', result.netIrpef, 'minus'],
-    ['Addizionale regionale Lombardia', result.regionalTax, 'minus'],
-    ['Addizionale comunale Milano', result.municipalTax, 'minus'],
+    ['IRPEF netta', shown(result.netIrpef), 'minus'],
+    ['Addizionale regionale Lombardia', shown(result.regionalTax), 'minus'],
+    ['Addizionale comunale Milano', shown(result.municipalTax), 'minus'],
   );
   if (result.taxFreeBenefit > 0) {
-    rows.push(['Somma esente riduzione cuneo', result.taxFreeBenefit, 'plus']);
+    rows.push([
+      'Somma esente riduzione cuneo',
+      shown(result.taxFreeBenefit),
+      'plus',
+    ]);
   }
   if (result.integrativeTreatment > 0) {
-    rows.push(['Trattamento integrativo', result.integrativeTreatment, 'plus']);
+    rows.push([
+      'Trattamento integrativo',
+      shown(result.integrativeTreatment),
+      'plus',
+    ]);
   }
 
   let y = 94;
@@ -116,10 +149,10 @@ export function buildSalaryPdf(result: SalaryResult) {
   pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(10);
   pdf.setTextColor(NAVY);
-  pdf.text('Netto annuo stimato', margin + 6, y + 13);
+  pdf.text(primaryNetLabel, margin + 6, y + 13);
   pdf.setFont('courier', 'bold');
   pdf.setTextColor(BLUE);
-  pdf.text(amount(result.netAnnual), pageWidth - margin - 6, y + 13, {
+  pdf.text(amount(primaryNet), pageWidth - margin - 6, y + 13, {
     align: 'right',
   });
 
@@ -130,14 +163,14 @@ export function buildSalaryPdf(result: SalaryResult) {
   pdf.text('Dettaglio fiscale', margin, y);
   y += 7;
   const taxDetails: Array<[string, number, 'minus' | 'plus' | 'neutral']> = [
-    ['Imponibile fiscale', result.taxableIncome, 'neutral'],
-    ['IRPEF lorda', result.grossIrpef, 'minus'],
-    ['Detrazione lavoro dipendente', result.employeeDeduction, 'plus'],
+    ['Imponibile fiscale', shown(result.taxableIncome), 'neutral'],
+    ['IRPEF lorda', shown(result.grossIrpef), 'minus'],
+    ['Detrazione lavoro dipendente', shown(result.employeeDeduction), 'plus'],
   ];
   if (result.additionalDeduction > 0) {
     taxDetails.push([
       'Ulteriore detrazione cuneo fiscale',
-      result.additionalDeduction,
+      shown(result.additionalDeduction),
       'plus',
     ]);
   }
@@ -166,8 +199,10 @@ export function buildSalaryPdf(result: SalaryResult) {
   pdf.setFont('helvetica', 'normal');
   pdf.setFontSize(8);
   pdf.setTextColor(SLATE);
-  const note =
-    'Dipendente privato non dirigente, tempo indeterminato, lavoro per l intero anno, residenza fiscale a Milano, nessun familiare a carico o altra agevolazione personale. Il risultato e una stima semplificata: non sostituisce una busta paga o una consulenza fiscale.';
+  const monthlyNote = isMonthly
+    ? ` Gli importi mensili sono medie ottenute dividendo i valori annuali per ${result.months}: i singoli cedolini possono variare.`
+    : '';
+  const note = `Dipendente privato non dirigente, tempo indeterminato, lavoro per l intero anno, residenza fiscale a Milano, nessun familiare a carico o altra agevolazione personale. Il risultato e una stima semplificata: non sostituisce una busta paga o una consulenza fiscale.${monthlyNote}`;
   const noteLines = pdf.splitTextToSize(note, contentWidth);
   pdf.text(noteLines, margin, y);
 
@@ -196,6 +231,9 @@ export function buildSalaryPdf(result: SalaryResult) {
   return pdf;
 }
 
-export function exportSalaryPdf(result: SalaryResult) {
-  buildSalaryPdf(result).save(filename(result));
+export function exportSalaryPdf(
+  result: SalaryResult,
+  view: PdfView = 'annual',
+) {
+  buildSalaryPdf(result, view).save(filename(result, view));
 }

@@ -30,17 +30,17 @@ Questa scelta rende ogni risultato riconducibile a un'ipotesi esplicita. Regione
 
 ## Decisioni di prodotto
 
-| Decisione                        | Perché                                                                           | Compromesso dichiarato                                                                  |
-| -------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Un solo caso standard Milano     | Mantiene il modello verificabile e permette di mostrare anche le addizionali     | Il risultato non è generalizzabile automaticamente ad altri territori o inquadramenti   |
-| RAL come unico dato richiesto    | Riduce l'attrito e risponde subito alla domanda principale                       | Le caratteristiche personali che influenzano il cedolino restano fuori dal perimetro    |
-| Netto annuo in evidenza          | È il risultato fiscalmente coerente con un calcolo costruito su base annuale     | Il netto mensile viene presentato come media, non come cedolino reale                   |
-| Scelta tra 12, 13 e 14 mensilità | Traduce lo stesso netto annuo nella periodicità più utile all'utente             | Cambia la distribuzione media, non imposte o contributi annuali                         |
-| Dettaglio Annuale/Mensile        | Permette di leggere ogni voce nell'unità più familiare                           | La vista mensile divide gli importi annuali e non simula i tempi reali delle trattenute |
-| Dettaglio IRPEF espandibile      | Offre profondità senza sovraccaricare la prima lettura                           | L'utente deve aprire volontariamente il livello più tecnico                             |
-| Riepilogo PDF opzionale          | Rende la stima condivisibile e conserva insieme risultato, ipotesi e avvertenze  | Non è un cedolino né un documento fiscale; la libreria viene caricata solo su richiesta |
-| Fonti dentro il prodotto         | Aliquote e soglie possono essere controllate senza fidarsi di una “scatola nera” | La manutenzione normativa diventa parte esplicita del prodotto                          |
-| Importi mostrati senza centesimi | Favorisce una lettura rapida ed evita un'impressione di precisione da cedolino   | Il motore conserva i decimali; l'interfaccia arrotonda soltanto la visualizzazione      |
+| Decisione                        | Perché                                                                                                            | Compromesso dichiarato                                                                  |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Un solo caso standard Milano     | Mantiene il modello verificabile e permette di mostrare anche le addizionali                                      | Il risultato non è generalizzabile automaticamente ad altri territori o inquadramenti   |
+| RAL come unico dato richiesto    | Riduce l'attrito e risponde subito alla domanda principale                                                        | Le caratteristiche personali che influenzano il cedolino restano fuori dal perimetro    |
+| Netto annuo in evidenza          | È il risultato fiscalmente coerente con un calcolo costruito su base annuale                                      | Il netto mensile viene presentato come media, non come cedolino reale                   |
+| Scelta tra 12, 13 e 14 mensilità | Traduce lo stesso netto annuo nella periodicità più utile all'utente                                              | Cambia la distribuzione media, non imposte o contributi annuali                         |
+| Dettaglio Annuale/Mensile        | Permette di leggere ogni voce nell'unità più familiare                                                            | La vista mensile divide gli importi annuali e non simula i tempi reali delle trattenute |
+| Dettaglio IRPEF espandibile      | Offre profondità senza sovraccaricare la prima lettura                                                            | L'utente deve aprire volontariamente il livello più tecnico                             |
+| Riepilogo PDF opzionale          | Rende la stima condivisibile, rispetta la vista Annuale/Mensile attiva e conserva risultato, ipotesi e avvertenze | Non è un cedolino né un documento fiscale; la libreria viene caricata solo su richiesta |
+| Fonti dentro il prodotto         | Aliquote e soglie possono essere controllate senza fidarsi di una “scatola nera”                                  | La manutenzione normativa diventa parte esplicita del prodotto                          |
+| Importi mostrati senza centesimi | Favorisce una lettura rapida ed evita un'impressione di precisione da cedolino                                    | Il motore conserva i decimali; l'interfaccia arrotonda soltanto la visualizzazione      |
 
 ## Avvio locale
 
