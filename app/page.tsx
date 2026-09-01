@@ -107,7 +107,14 @@ function MoneyRow({
 }
 
 function Results({ result }: { result: SalaryResult }) {
+  const [breakdownView, setBreakdownView] = useState<'annual' | 'monthly'>(
+    'annual',
+  );
   const retained = result.netAnnual / result.grossAnnual;
+  const isMonthly = breakdownView === 'monthly';
+  const divisor = isMonthly ? result.months : 1;
+  const shown = (value: number) => value / divisor;
+
   return (
     <div className="space-y-4" aria-live="polite">
       <Card className="border-0 bg-[#111b33] text-white shadow-[0_24px_70px_rgba(16,28,55,0.22)] ring-0">
@@ -140,73 +147,98 @@ function Results({ result }: { result: SalaryResult }) {
       </Card>
 
       <Card className="bg-white/90 shadow-sm ring-slate-200">
-        <CardHeader className="border-b border-slate-100">
+        <CardHeader className="border-b border-slate-100 sm:grid-cols-[1fr_auto] sm:grid-rows-[auto_auto]">
           <CardTitle>Come si arriva al netto</CardTitle>
+          <fieldset
+            className="mt-2 inline-grid grid-cols-2 rounded-lg bg-slate-100 p-1 sm:col-start-2 sm:row-span-2 sm:mt-0 sm:self-center"
+          >
+            <legend className="sr-only">Periodo del dettaglio</legend>
+            {(['annual', 'monthly'] as const).map((view) => (
+              <button
+                key={view}
+                type="button"
+                onClick={() => setBreakdownView(view)}
+                aria-pressed={breakdownView === view}
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244fbf]/30 ${breakdownView === view ? 'bg-white text-[#244fbf] shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+              >
+                {view === 'annual' ? 'Annuale' : 'Mensile'}
+              </button>
+            ))}
+          </fieldset>
           <CardDescription>
-            Dettaglio annuale delle trattenute stimate
+            {isMonthly
+              ? `Media su ${result.months} mensilità delle trattenute stimate`
+              : 'Dettaglio annuale delle trattenute stimate'}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <MoneyRow
-            label="Retribuzione annua lorda"
-            value={result.grossAnnual}
+            label={isMonthly ? 'Retribuzione lorda media' : 'Retribuzione annua lorda'}
+            value={shown(result.grossAnnual)}
             tone="neutral"
           />
           <MoneyRow
             label="Contributi INPS ordinari (9,19%)"
-            value={result.ordinaryContributions}
+            value={shown(result.ordinaryContributions)}
           />
           {result.additionalContribution > 0 && (
             <MoneyRow
               label="Contributo aggiuntivo 1% oltre €56.224"
-              value={result.additionalContribution}
+              value={shown(result.additionalContribution)}
             />
           )}
-          <MoneyRow label="IRPEF netta" value={result.netIrpef} />
+          <MoneyRow label="IRPEF netta" value={shown(result.netIrpef)} />
           <MoneyRow
             label="Addizionale regionale Lombardia"
-            value={result.regionalTax}
+            value={shown(result.regionalTax)}
           />
           <MoneyRow
             label="Addizionale comunale Milano"
-            value={result.municipalTax}
+            value={shown(result.municipalTax)}
           />
           <div className="my-3 grid grid-cols-2 gap-2 border-y border-slate-200 py-3">
             <div className="rounded-lg bg-slate-50 p-3">
               <p className="text-xs text-slate-500">Totale imposte</p>
               <p className="mt-1 font-mono text-base font-bold text-slate-900">
-                {eur.format(result.totalTaxes)}
+                {eur.format(shown(result.totalTaxes))}
               </p>
             </div>
             <div className="rounded-lg bg-slate-50 p-3">
               <p className="text-xs text-slate-500">Totale trattenute</p>
               <p className="mt-1 font-mono text-base font-bold text-slate-900">
-                {eur.format(result.totalDeductions)}
+                {eur.format(shown(result.totalDeductions))}
               </p>
             </div>
           </div>
           {result.taxFreeBenefit > 0 && (
             <MoneyRow
               label="Somma esente per riduzione del cuneo"
-              value={result.taxFreeBenefit}
+              value={shown(result.taxFreeBenefit)}
               tone="positive"
             />
           )}
           {result.integrativeTreatment > 0 && (
             <MoneyRow
               label="Trattamento integrativo"
-              value={result.integrativeTreatment}
+              value={shown(result.integrativeTreatment)}
               tone="positive"
             />
           )}
           <div className="mt-2 flex items-center justify-between gap-4 rounded-xl bg-[#eef3ff] px-4 py-3">
             <span className="text-sm font-semibold text-[#111b33]">
-              Netto annuo stimato
+              {isMonthly ? 'Netto mensile medio' : 'Netto annuo stimato'}
             </span>
             <span className="font-mono text-base font-bold text-[#244fbf]">
-              {eur.format(result.netAnnual)}
+              {eur.format(shown(result.netAnnual))}
             </span>
           </div>
+          {isMonthly && (
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              Media ottenuta dividendo gli importi annuali per {result.months}.
+              I singoli cedolini possono variare per addizionali, conguagli e
+              tredicesima o quattordicesima.
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -218,19 +250,19 @@ function Results({ result }: { result: SalaryResult }) {
         <div className="mt-3 border-t border-slate-100 pt-2">
           <MoneyRow
             label="Imponibile fiscale"
-            value={result.taxableIncome}
+            value={shown(result.taxableIncome)}
             tone="neutral"
           />
-          <MoneyRow label="IRPEF lorda" value={result.grossIrpef} />
+          <MoneyRow label="IRPEF lorda" value={shown(result.grossIrpef)} />
           <MoneyRow
             label="Detrazione lavoro dipendente"
-            value={result.employeeDeduction}
+            value={shown(result.employeeDeduction)}
             tone="positive"
           />
           {result.additionalDeduction > 0 && (
             <MoneyRow
               label="Ulteriore detrazione cuneo fiscale"
-              value={result.additionalDeduction}
+              value={shown(result.additionalDeduction)}
               tone="positive"
             />
           )}
